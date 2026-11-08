@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bassin – solo pool</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EAF3F1;--sf:#fff;--ink:#0B2530;--mut:#4F6E78;--line:#C9DCD9;--amb:#B8650A;--ring:#0B253018;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1F29;--sf:#11323F;--ink:#E6F4F1;--mut:#8FB1BA;--line:#1E4756;--amb:#FFB347;--ring:#E6F4F118}}
+:root[data-theme="dark"]{--bg:#0A1F29;--sf:#11323F;--ink:#E6F4F1;--mut:#8FB1BA;--line:#1E4756;--amb:#FFB347;--ring:#E6F4F118}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Instrument Sans",system-ui,sans-serif;font-variant-numeric:tabular-nums}
+main{max-width:900px;margin:0 auto;padding:20px 18px 48px}
+h1,.big,.v,strong{font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:1.5rem;margin:0;font-weight:800;display:flex;align-items:center;gap:10px}
+.tag{font-size:.8rem;padding:2px 10px;border-radius:99px;border:1px solid var(--line);color:var(--mut);font-weight:400;font-family:"Instrument Sans",system-ui,sans-serif}
+.tag.live{color:var(--amb);border-color:var(--amb)}
+.tag.bad{color:#D4412C;border-color:#D4412C}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{all:unset;cursor:pointer;padding:6px 16px;font-weight:600;color:var(--mut)}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible{outline:2px solid var(--amb);outline-offset:-2px}
+.bests{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:22px}
+.best{background:var(--sf);border:1px solid var(--line);border-radius:18px;padding:22px 22px 18px;position:relative;overflow:hidden}
+.best::before{content:"";position:absolute;right:-70px;top:-70px;width:220px;aspect-ratio:1;border-radius:50%;background:repeating-radial-gradient(circle,transparent 0 18px,var(--ring) 18px 20px);pointer-events:none}
+.best>*{position:relative}
+.best .k{margin:0;color:var(--mut);font-weight:600}
+.best .v{font-size:clamp(2.8rem,12vw,4.4rem);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin:4px 0}
+.best p{margin:2px 0;color:var(--mut)}
+.best b{color:var(--ink)}
+.best .o{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.best .o b{color:var(--amb);font-size:1.15rem}
+.splash{animation:splash 1.8s ease-out}
+@keyframes splash{0%{box-shadow:0 0 0 0 var(--amb);border-color:var(--amb)}100%{box-shadow:0 0 0 28px transparent}}
+.card{background:var(--sf);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:22px}
+h2{font-size:1.1rem;margin:0 0 10px;font-weight:600;display:flex;align-items:center;gap:10px}
+.lbl{margin:0;color:var(--mut)}
+.big{font-size:clamp(2.8rem,13vw,5.5rem);font-weight:800;line-height:1;letter-spacing:-.03em;margin:4px 0 10px}
+.ng{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 24px}
+.ng span,.cols span{color:var(--mut);font-size:.85rem;display:block}
+.ng strong{font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.bar{height:8px;border-radius:99px;background:var(--line);margin:16px 0 6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--amb);border-radius:99px;transition:width .6s}
+.w{background:var(--sf);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:10px}
+.w header{margin-bottom:8px}.w header b{font-size:1.05rem}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px 24px}
+.cols strong{font-size:1.2rem}
+.cols em{font-style:normal;color:var(--amb);font-size:.92rem;display:block}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:600;transition:transform .35s;max-width:90vw;text-align:center}
+#toast.on{transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){.splash{animation:none}#toast,.bar i{transition:none}}
+</style></head><body>
+<main>
+<header><h1>Bassin <span id="mode" class="tag">…</span></h1>
+<div class="seg" id="seg" role="group" aria-label="Period">
+<button data-p="86400">Day</button><button data-p="604800">Week</button><button data-p="2629800">Month</button><button data-p="31557600" aria-pressed="true">Year</button></div></header>
+
+<section class="bests">
+<div class="best" id="bd"><p class="k">Best share of the day</p><div class="v" id="bdv">—</div><p id="bdw"></p><p>Resets in <b id="reset">—</b></p><p class="o" id="bdo"></p></div>
+<div class="best" id="be"><p class="k">Best share ever</p><div class="v" id="bev">—</div><p id="bew"></p><p class="o" id="beo"></p></div>
+</section>
+
+<section class="card"><p class="lbl" id="olbl">Chance of finding a block</p>
+<div class="big" id="odds">—</div>
+<div class="ng"><div><span>Connected hashrate</span><strong id="hr">—</strong></div>
+<div><span>Share of the network</span><strong id="share">—</strong></div>
+<div><span>Average wait for a block</span><strong id="wait">—</strong></div></div></section>
+
+<section class="card" id="nd"><h2>Bitcoin network <span class="tag" id="nst">…</span></h2>
+<div class="ng"><div><span>Difficulty</span><strong id="ndv">—</strong></div>
+<div><span>Network hashrate</span><strong id="nhr">—</strong></div>
+<div><span>Latest block</span><strong id="nbk">—</strong></div></div>
+<div class="bar"><i id="nbar"></i></div><p class="lbl" id="nadj"></p></section>
+
+<section><h2>Miners</h2><div id="ws"></div></section>
+</main>
+<div id="toast" role="status"></div>
+<script>
+const $=s=>document.querySelector(s),T32=2**32,nf=new Intl.NumberFormat("en-US");
+let period=31557600,S=null,D=null,prev={};
+const dec=(v,d)=>v.toFixed(d);
+function sfx(v){const u=["","K","M","G","T","P","E"];let i=0;while(v>=1000&&i<6){v/=1000;i++}return dec(v,v>=100?0:v>=10?1:2)+" "+u[i]}
+const fh=v=>sfx(v)+"H/s";
+function dur(s){for(const[k,n]of[[31557600,"yr"],[2629800,"mo"],[86400,"d"],[3600,"h"],[60,"min"]])if(s>=k){const v=s/k;return(v>=100?nf.format(Math.round(v)):dec(v,v>=10?0:1))+" "+n+(n==="yr"&&v>=2?"s":"")}return Math.round(s)+" s"}
+const pr=l=>-Math.expm1(-l);
+function fo(p){if(!(p>0))return"—";const n=1/p;return"1/"+(n<10?dec(n,1):nf.format(Math.round(n)))}
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),5000)}
+function splash(id){const e=$(id);e.classList.remove("splash");void e.offsetWidth;e.classList.add("splash")}
+const beat=(H,Df,sec)=>Df>0?pr(H*sec/(Df*T32)):0;
+function render(){
+const H=S.pool.hashrate,N=S.network,tb=N.difficulty*T32/N.hashrate,sh=H/N.hashrate;
+const lam=sh*period/tb;
+$("#odds").textContent=H>0?fo(pr(lam)):"—";
+$("#olbl").textContent="Chance of finding a block per "+({86400:"day",604800:"week",2629800:"month",31557600:"year"})[period];
+$("#hr").textContent=fh(H);
+$("#share").textContent=sh<1e-6?"< 0.0001 %":dec(sh*100,4)+" %";
+$("#wait").textContent=H>0?dur(tb/sh):"—";
+const bd=S.best_day,be=S.best_ever;
+$("#bdv").textContent=sfx(bd.value);$("#bdw").innerHTML=bd.worker?"by <b>"+bd.worker+"</b>":"";
+$("#bev").textContent=sfx(be.value);$("#bew").innerHTML=be.worker?"by <b>"+be.worker+"</b>":"";
+const PT={86400:"in 24 h",604800:"in 7 days",2629800:"in 1 month",31557600:"in 1 year"}[period];
+const bo=v=>H>0&&v>0?"Odds to beat it "+PT+": <b>"+fo(beat(H,v,period))+"</b><br>Average wait: <b>"+dur(v*T32/H)+"</b>":"";
+$("#bdo").innerHTML=bo(bd.value);$("#beo").innerHTML=bo(be.value);
+if(prev.df!==undefined&&N.difficulty!==prev.df){splash("#nd");toast("Difficulty adjusted: "+sfx(N.difficulty)+" ("+(N.difficulty>prev.df?"+":"−")+dec(Math.abs(N.difficulty/prev.df-1)*100,2)+" %)")}
+if(prev.bd!==undefined&&bd.value>prev.bd){splash("#bd");toast("New best share of the day: "+sfx(bd.value)+" by "+bd.worker)}
+if(prev.be!==undefined&&be.value>prev.be){splash("#be");toast("New all-time record: "+sfx(be.value)+" by "+be.worker)}
+prev={bd:bd.value,be:be.value,df:N.difficulty};
+$("#ws").innerHTML=S.workers.map(w=>`<article class="w"><header><b>${w.name}</b><span class="tag">${fh(w.hashrate)}</span></header><div class="cols">
+<div><span>Best of the day</span><strong>${sfx(w.best_day)}</strong><em>Odds to beat it ${PT}: ${fo(beat(w.hashrate,w.best_day,period))}</em></div>
+<div><span>Best ever</span><strong>${sfx(w.best_ever)}</strong><em>Odds to beat it ${PT}: ${fo(beat(w.hashrate,w.best_ever,period))}</em><span>Average wait: ${w.best_ever>0&&w.hashrate>0?dur(w.best_ever*T32/w.hashrate):"—"}</span></div></div></article>`).join("");
+$("#ndv").textContent=sfx(N.difficulty);$("#nhr").textContent=fh(N.hashrate);$("#nbk").textContent=nf.format(N.height);
+const ok=S.demo?null:!!(S.node&&S.node.ok);
+$("#nst").textContent=S.demo?"Demo data":ok?"Node connected":"Node unreachable";
+$("#nst").className="tag"+(ok===true?" live":ok===false?" bad":"");
+const into=N.height%2016,rem=2016-into;
+$("#nbar").style.width=(into/2016*100)+"%";
+$("#nadj").textContent="Next difficulty adjustment in "+nf.format(rem)+" blocks, about "+dur(rem*600)+" ("+dec(into/2016*100,1)+" % of the period)";
+$("#mode").textContent=S.demo?"Demo":"Live";$("#mode").className="tag"+(S.demo?"":" live");
+}
+function tick(){if(!S)return;let s=Math.max(0,Math.floor((S.day_reset*1000-Date.now())/1000));
+$("#reset").textContent=[s/3600|0,(s%3600)/60|0,s%60].map(x=>String(x).padStart(2,"0")).join(":")}
+function mkDemo(){const m=new Date();m.setHours(24,0,0,0);
+const w=["bitaxe-1","bitaxe-2","bitaxe-3","bitaxe-4"].map((n,i)=>({name:n,hashrate:1.06e12+i*2e10,best_day:2.1e8*(i+1),best_ever:[3.9e9,1.4e9,7.2e9,2.2e9][i]}));
+return{demo:true,workers:w,day_reset:m/1000,network:{hashrate:958.24e18,difficulty:148.36e12,height:975073},pool:{hashrate:0},best_day:{},best_ever:{}}}
+function stepDemo(d){let tot=0,bd={value:0},be={value:0};
+d.workers.forEach(w=>{w.hashrate*=1+(Math.random()-.5)*.03;if(Math.random()<.12)w.best_day*=1+Math.random()*1.5;w.best_day=Math.min(w.best_day,w.best_ever*(Math.random()<.01?1.2:1));if(w.best_day>w.best_ever)w.best_ever=w.best_day;
+tot+=w.hashrate;if(w.best_day>bd.value)bd={value:w.best_day,worker:w.name};if(w.best_ever>be.value)be={value:w.best_ever,worker:w.name}});
+if(Math.random()<.03)d.network.height++;d.pool.hashrate=tot;d.best_day=bd;d.best_ever=be}
+async function load(){try{const r=await fetch("api/stats",{cache:"no-store"});if(!r.ok)throw 0;S=await r.json()}catch(e){D=D||mkDemo();stepDemo(D);S=D}render();tick()}
+$("#seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;period=+b.dataset.p;document.querySelectorAll("#seg button").forEach(x=>x.setAttribute("aria-pressed",x===b));if(S)render()});
+load();setInterval(load,5000);setInterval(tick,1000);
+</script></body></html>
