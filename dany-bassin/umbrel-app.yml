@@ -1,0 +1,23 @@
+manifestVersion: 1
+id: dany-bassin
+category: bitcoin
+name: Mon Bassin
+version: "0.1.0"
+tagline: Ton pool solo ckpool, avec best shares et odds en direct
+description: >-
+  Pool de solo mining (ckpool) branché sur ton nœud Bitcoin. Tableau de bord avec best share du jour
+  (remis à zéro chaque jour), best share de tous les temps, chances de trouver un bloc et chances de
+  battre tes best shares, recalculées avec la difficulté réelle du réseau.
+developer: Dany
+website: ""
+dependencies:
+  - bitcoin
+repo: ""
+support: ""
+port: 8080
+gallery: []
+path: ""
+defaultPassword: ""
+releaseNotes: ""
+submitter: Dany
+submission: ""
